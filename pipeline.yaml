@@ -1,7 +1,7 @@
 kind: Pipeline
 apiVersion: tekton.dev/v1beta1
 metadata:
-  name: a-simple-pipeline-test
+  name: a-simple-pipeline
 spec:
   params:
   - name: username
