@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: github-pr-pipeline
+  namespace: tekton-awl
 spec:
   resources:
     - name: source
@@ -19,13 +20,33 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: test
+  namespace: tekton-awl
 spec:
   resources:
     inputs:
       - name: source
         type: git
   steps:
-    - name: build-image
-      command: ["docker build -t awlauria-tekton ."]
     - name: run-image
-      command: ["docker run -ti awlauria-tekton"]
+      image: awlauria/tekton-demo:latest
+      imagePullPolicy: Always
+      script: |
+        #!/bin/bash
+        cd /workspace/source
+        ls -ltr
+        cat hello_world.cpp
+        g++ -g -o hello_world hello_world.cpp
+        ./hello_world
+---
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: mytaskrun
+  namespace: tekton-awl
+spec:
+  taskRef:
+    name: test
+  podTemplate:
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
