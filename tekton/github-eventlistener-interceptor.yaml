@@ -69,6 +69,9 @@ spec:
       spec:
         pipelineRef:
           name: github-pr-pipeline
+        params:
+          - name: "revision"
+            value: "$(tt.params.gitrevision)"
         resources:
           - name: source
             resourceSpec:
