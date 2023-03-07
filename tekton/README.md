@@ -36,3 +36,12 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 10. Create a kubectl secret with the api key: ```kubectl create secret generic github --from-literal=GITHUB_TOKEN=<access-token>
 
 11. That should be it - try it out by opening a PR to this repo and see what isn't working. :) 
+
+## Run the tekton dashboard
+
+1. Download/install the dashboard: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/release.yaml`
+1a. Verify the pod is running: `kubectl get pods --namespace tekton-pipelines --watch`
+2. Access the dashboard in your favorite web browser: http://localhost:8001/api/v1/namespaces/tekton-pipelines/services/tekton-dashboard:http/proxy/#/about
+
+
+
