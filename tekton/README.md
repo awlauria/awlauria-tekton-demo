@@ -17,6 +17,8 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
 kubectl apply --filename \
 https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 ```
+   - github status task: `kubectl apply -f https://api.hub.tekton.dev/v1/resource/tekton/task/github-set-status/0.4/raw`
+
 3a: verify the installation: `kubectl get pods --namespace tekton-pipelines --watch`
 
 4: install ngrok to easily expose your pipline pods to the internet: `brew install ngrok/ngrok/ngrok`
