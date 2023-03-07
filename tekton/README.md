@@ -4,6 +4,7 @@
 
 
 1. Download/install minikuke:
+   -  You'll need Docker: https://docs.docker.com/desktop/install/mac-install/ 
    -  https://minikube.sigs.k8s.io/docs/start/
 
 2. start minikube: `minikuke start`
@@ -35,7 +36,7 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 
 9a: Run the `curl.sh` script to test out the pipeline locally. You should get a `202 Accepted` response if all is well.
 
-10. Create a kubectl secret with the api key: ```kubectl create secret generic github --from-literal=GITHUB_TOKEN=<access-token>
+10. Create a kubectl secret with the api key: `kubectl create secret generic github --from-literal=GITHUB_TOKEN=<access-token>`
 
 11. That should be it - try it out by opening a PR to this repo and see what isn't working. :) 
 
