@@ -45,4 +45,3 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 
 
 
-
