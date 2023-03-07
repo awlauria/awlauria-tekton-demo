@@ -1,41 +1,36 @@
-## GitHub EventListener
+## Run the pipeline
 
-Creates an EventListener that listens for GitHub webhook events.
+### Instructions for mac.
 
-### Try it out locally:
 
-1. To create the GitHub trigger and all related resources, run:
+1. Download/install minikuke:
+   -  https://minikube.sigs.k8s.io/docs/start/
 
-   ```bash
-   kubectl apply -f .
-   ```
+2. start minikube: `minikuke start`
 
-1. Port forward:
+3. Download tekton:
+   - pipelines: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`
+   - triggers:
+```kubectl apply --filename \
+https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
 
-   ```bash
-   kubectl port-forward service/el-github-listener 8080
-   ```
+kubectl apply --filename \
+https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
+```
+3.1: verify the installation: `kubectl get pods --namespace tekton-pipelines --watch`
 
-1. Test by sending the sample payload.
+4: install ngrok to easily expose your pipline pods to the internet: `brew install ngrok/ngrok/ngrok`
 
-   ```bash
-   curl -v \
-   -H 'X-GitHub-Event: pull_request' \
-   -H 'X-Hub-Signature: sha1=ba0cdc263b3492a74b601d240c27efe81c4720cb' \
-   -H 'Content-Type: application/json' \
-   -d '{"action": "opened", "pull_request":{"head":{"sha": "28911bbb5a3e2ea034daf1f6be0a822d50e31e73"}},"repository":{"clone_url": "https://github.com/tektoncd/triggers.git"}}' \
-   http://localhost:8080
-   ```
+5. run ngrok: `ngrok http 8080`
 
-   The response status code should be `202 Accepted`
+6. Create the namespace `kubectl create namespace tekton-awl`
 
-   [`HMAC`](https://www.freeformatter.com/hmac-generator.html) tool used to create X-Hub-Signature.
+6. Run: `kubectl -n tekton-awl apply -f .`
 
-   In [`HMAC`](https://www.freeformatter.com/hmac-generator.html) `string` is the *body payload ex:* `{"action": "opened", "pull_request":{"head":{"sha": "28911bbb5a3e2ea034daf1f6be0a822d50e31e73"}},"repository":{"clone_url": "https://github.com/tektoncd/triggers.git"}}`
-   and `secretKey` is the *given secretToken ex:* `1234567`.
+7. Enable port forwarding, this will forward external web traffic to your listener service `kubectl port-forward service/el-github-listener 8080`
 
-1. You should see a new TaskRun that got created:
+7a: Run the `curl.sh` script to test out the pipeline locally. You should get a `202 Accepted` response if all is well.
 
-   ```bash
-   kubectl get taskruns | grep github-run-
-   ```
+8. Create a kubectl secret with the api key: ```kubectl create secret generic github --from-literal=GITHUB_TOKEN=<access-token>
+
+8. That should be it - try it out by opening a PR to this repo and see what isn't working. :) 
