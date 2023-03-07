@@ -1,3 +1,3 @@
-# Tekton Demo.
+# Tekton Demo repository.
 
-:shrug:
+See README.md under the tekton folder on how to run locally for development purposes.
