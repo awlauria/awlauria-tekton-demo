@@ -27,7 +27,7 @@ spec:
         - name: AUTH_TYPE
           value: Bearer
         - name: TARGET_URL
-          value: https://api.github.com/repos/awlauria/awlauria-tekton-demo/statuses/$(params.revision)
+          value: http://localhost:9097/#/namespaces/tekton-awl/pipelineruns/github-run-$(params.revision)
     - name: test
       taskRef:
         name: test
@@ -48,13 +48,13 @@ spec:
         - name: SHA
           value: "$(params.revision)"
         - name: DESCRIPTION
-          value: "build complete"
+          value: "$(tasks.test.results.exit_string)"
         - name: STATE
-          value: success
+          value: "$(tasks.test.results.exit_state)"
         - name: AUTH_TYPE
           value: Bearer
         - name: TARGET_URL
-          value: https://api.github.com/repos/awlauria/awlauria-tekton-demo/statuses/$(params.revision)
+          value: http://localhost:9097/#/namespaces/tekton-awl/pipelineruns/github-run-$(params.revision)
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
@@ -62,6 +62,11 @@ metadata:
   name: test
   namespace: tekton-awl
 spec:
+  results:
+    - name: exit_string
+      description: Exit string of test
+    - name: exit_state
+      description: The exit state of the test (success/failure)
   resources:
     inputs:
       - name: source
@@ -70,14 +75,25 @@ spec:
     - name: run-image
       image: awlauria/tekton-demo:latest
       imagePullPolicy: Always
+      onError: continue
       script: |
         #!/bin/bash
         cd /workspace/source
         ls -ltr
         cat hello_world.cpp
         g++ -g -o hello_world hello_world.cpp
+        out=$?
+        echo $out
+        if [[ $out -ne 0 ]] ;
+        then
+          echo -n "Test failed!" | tee $(results.exit_string.path)
+          echo -n "failure" | tee $(results.exit_state.path)
+          exit 1
+        fi
         ./hello_world
-        sleep 10
+        out=$?
+        echo -n "success" | tee $(results.exit_state.path)
+        echo -n "Test passed!" | tee $(results.exit_string.path)
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun

@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  labels:
+    tekton.dev/task: github-set-status
+  name: github-set-status
+  namespace: tekton-awl
+spec:
+  taskRef:
+    kind: Task
+    name: github-set-status-with-basic-auth
