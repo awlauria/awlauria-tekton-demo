@@ -2,6 +2,6 @@
 
 int main() {
 
-  std::cout << "Hello tekton!" << stdfoo::endl;
+  std::cout << "Hello tekton!" << stdfoo2::endl;
 
 }
