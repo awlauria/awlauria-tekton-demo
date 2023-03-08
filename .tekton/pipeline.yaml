@@ -12,49 +12,49 @@ spec:
     type: string
     default: 42
   tasks:
-    - name: github-set-status-start
-      taskRef:
-        name: github-set-status
-      params:
-        - name: REPO_FULL_NAME
-          value: awlauria/awlauria-tekton-demo
-        - name: SHA
-          value: "$(params.revision)"
-        - name: DESCRIPTION
-          value: "build started"
-        - name: STATE
-          value: pending
-        - name: AUTH_TYPE
-          value: Bearer
-        - name: TARGET_URL
-          value: http://localhost:9097/#/namespaces/tekton-awl/pipelineruns/github-run-$(params.revision)
+#    - name: github-set-status-start
+#     taskRef:
+#        name: github-set-status
+#      params:
+#        - name: REPO_FULL_NAME
+#          value: awlauria/awlauria-tekton-demo
+#        - name: SHA
+#          value: "$(params.revision)"
+#        - name: DESCRIPTION
+#          value: "build started"
+#        - name: STATE
+#          value: pending
+#        - name: AUTH_TYPE
+#          value: Bearer
+#        - name: TARGET_URL
+#          value: http://localhost:9097/#/namespaces/tekton-awl/pipelineruns/github-run-$(params.revision)
     - name: test
       taskRef:
         name: test
-      runAfter:
-        - github-set-status-start
+#      runAfter:
+#        - github-set-status-start
       resources:
         inputs:
         - name: source
           resource: source
-    - name: github-set-status-end
-      taskRef:
-        name: github-set-status
-      runAfter:
-        - test
-      params:
-        - name: REPO_FULL_NAME
-          value: awlauria/awlauria-tekton-demo
-        - name: SHA
-          value: "$(params.revision)"
-        - name: DESCRIPTION
-          value: "$(tasks.test.results.exit_string)"
-        - name: STATE
-          value: "$(tasks.test.results.exit_state)"
-        - name: AUTH_TYPE
-          value: Bearer
-        - name: TARGET_URL
-          value: http://localhost:9097/#/namespaces/tekton-awl/pipelineruns/github-run-$(params.revision)
+#    - name: github-set-status-end
+#      taskRef:
+#        name: github-set-status
+#      runAfter:
+#        - test
+#      params:
+#        - name: REPO_FULL_NAME
+#          value: awlauria/awlauria-tekton-demo
+#        - name: SHA
+#          value: "$(params.revision)"
+#        - name: DESCRIPTION
+#          value: "$(tasks.test.results.exit_string)"
+#        - name: STATE
+#          value: "$(tasks.test.results.exit_state)"
+#        - name: AUTH_TYPE
+#          value: Bearer
+#        - name: TARGET_URL
+#          value: http://localhost:9097/#/namespaces/tekton-awl/pipelineruns/github-run-$(params.revision)
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
@@ -94,18 +94,18 @@ spec:
         out=$?
         echo -n "success" | tee $(results.exit_state.path)
         echo -n "Test passed!" | tee $(results.exit_string.path)
----
-apiVersion: tekton.dev/v1beta1
-kind: TaskRun
-metadata:
-  labels:
-    tekton.dev/task: github-set-status
-  name: github-set-status
-  namespace: tekton-awl
-spec:
-  taskRef:
-    kind: Task
-    name: github-set-status-with-basic-auth
+#---
+#apiVersion: tekton.dev/v1beta1
+#kind: TaskRun
+#metadata:
+#  labels:
+#    tekton.dev/task: github-set-status
+#  name: github-set-status
+#  namespace: tekton-awl
+#spec:
+#  taskRef:
+#    kind: Task
+#    name: github-set-status-with-basic-auth
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TaskRun
