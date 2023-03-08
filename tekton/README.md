@@ -26,7 +26,27 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 
 5. run ngrok: `ngrok http 8080`. leave this window open.
 
-6: Add the webhook: Take the `Forwarding url` from the ngrok terminal window above (something like `https://b0dc-0x-42-42-42.ngrok.io`) and add it to settings -> webooks -> add webhook. In the `secrets` tab, put `1234567`, which matches the `secret.yaml` file. For a free version of ngrok, this link expires in 2 hours, at which point you will have to restart and edit the webook to use the new link. You can see the webhook is working if you see a successful read/write in the recent deliveries tab under your link.
+6: Add the webhook: Take the `Forwarding url` from the ngrok terminal window above (something like `https://b0dc-0x-42-42-42.ngrok.io`) and add it to github -> settings -> webooks -> add webhook. 
+Additional fields:
+   - Secret: `1234567` (matches the secret.yaml file).
+   - Events: Only check pull request for now.
+   - Type: json
+
+A successful delivery header from Github will look like:
+```
+Request URL: https://0269-68-193-137-109.ngrok.io
+Request method: POST
+Accept: */*
+content-type: application/json
+User-Agent: GitHub-Hookshot/5473b54
+X-GitHub-Delivery: 5a38e970-bd61-11ed-9c6e-7298a114e0ce
+X-GitHub-Event: pull_request
+X-GitHub-Hook-ID: 404051636
+X-GitHub-Hook-Installation-Target-ID: 609247654
+X-GitHub-Hook-Installation-Target-Type: repository
+X-Hub-Signature: sha1=c22332454d089c47637e37f90d7667462eca30c7
+X-Hub-Signature-256: sha256=9422cc65f04a5c2bd155da90c9099c468b6b540333307bdd8b578644e4645641
+```
 
 7. Create the namespace `kubectl create namespace tekton-awl`
 
