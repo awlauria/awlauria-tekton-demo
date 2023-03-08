@@ -26,7 +26,7 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 
 5. run ngrok: `ngrok http 8080`. leave this window open.
 
-6: Add the webhook: Take the `Forwarding url` from the ngrok terminal window above (something like `https://b0dc-0x-42-42-42.ngrok.io`) and add it to settings -> webooks -> add webhook For a free version of ngrok, this link expires in 2 hours, at which point you will have to restart and edit the webook to use the new link. You can see the webhook is working if you see a successful read/write in the recent deliveries tab under your link.
+6: Add the webhook: Take the `Forwarding url` from the ngrok terminal window above (something like `https://b0dc-0x-42-42-42.ngrok.io`) and add it to settings -> webooks -> add webhook. In the `secrets` tab, put `1234567`, which matches the `secret.yaml` file. For a free version of ngrok, this link expires in 2 hours, at which point you will have to restart and edit the webook to use the new link. You can see the webhook is working if you see a successful read/write in the recent deliveries tab under your link.
 
 7. Create the namespace `kubectl create namespace tekton-awl`
 
@@ -36,7 +36,7 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 
 9a: Run the `curl.sh` script to test out the pipeline locally. You should get a `202 Accepted` response if all is well.
 
-10. Create a kubectl secret with the api key: `kubectl create secret generic github --from-literal=GITHUB_TOKEN=<access-token>`
+10. Create a kubectl secret with the api key: `kubectl create secret generic github --from-literal=GITHUB_TOKEN=<access-token>`. This is for the github status reporting.
 
 11. That should be it - try it out by opening a PR to this repo and see what isn't working (ie - what I missed) :) 
 
@@ -44,4 +44,9 @@ https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml
 
 1. Download/install the dashboard: `kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/release.yaml`
 1a. Verify the pod is running: `kubectl get pods --namespace tekton-pipelines --watch`
-2. Access the dashboard in your favorite web browser: http://localhost:8001/api/v1/namespaces/tekton-pipelines/services/tekton-dashboard:http/proxy/#/about
+
+2. Enable port forwarding: `kubectl port-forward -n tekton-pipelines service/tekton-dashboard 9097:9097`
+3. Access the dashboard in your favorite web browser: `http://localhost:9097`
+
+
+
