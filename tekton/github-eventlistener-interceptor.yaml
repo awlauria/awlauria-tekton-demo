@@ -65,7 +65,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: github-run-
+        name: github-run-$(tt.params.gitrevision)
       spec:
         pipelineRef:
           name: github-pr-pipeline
